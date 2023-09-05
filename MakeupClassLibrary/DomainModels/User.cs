@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
 
-namespace Makeup_1.Models.ViewModels
+namespace MakeupClassLibrary.DomainModels
 {
     public class User : IdentityUser
     {
