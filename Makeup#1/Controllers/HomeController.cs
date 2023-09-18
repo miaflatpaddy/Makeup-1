@@ -1,4 +1,5 @@
-﻿using Makeup_1.Models;
+﻿using Makeup_1.Database;
+using Makeup_1.Models;
 using MakeupClassLibrary.DomainModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -7,10 +8,12 @@ namespace Makeup_1.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ShopContext _shopContext;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ShopContext shopContext,ILogger<HomeController> logger)
         {
+            _shopContext = shopContext;
             _logger = logger;
         }
 
@@ -41,7 +44,20 @@ namespace Makeup_1.Controllers
         {
 
         }
-        public void Add(Product product) { }
+        public async Task<IActionResult> Add(string name,string desc,double price,int brandid, string MoU = "") {
+            Product product = new Product();
+            product.Name = name;
+            product.Description = desc;
+            product.Price = price;
+            product.BrandId = brandid;
+            if (MoU != "")
+            {
+                product.MethodOfUse = MoU;
+            }
+            product.Brand = _shopContext.Brands.FindAsync(brandid);
+
+
+        }
         public void Remove(Product product) { }
         public void AddToCart(Product product) { }
         public void RemoveFromCart(Product product) { }
