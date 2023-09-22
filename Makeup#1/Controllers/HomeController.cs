@@ -105,19 +105,44 @@ namespace Makeup_1.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
-        public void AddToCart(Product product) { }
-        public void RemoveFromCart(Product product) { }
-        public void Buy(Order order) { }
-        public void Clear() { }
-        public void Update(Product product) { }
+        public void AddToCart(Product product,int count,string userid,CartModel cm) {
+            cm.UserId = userid;
+            OrderItem item = new OrderItem();
+            item.ProductId = product.Id;
+            item.quantity = count;
+            item.Product = product;
+            cm.items.Add(item);
+
+        }
+        public void RemoveFromCart(CartModel cm,Product product) {
+            cm.items.ForEach(item => { if (item.ProductId == product.Id) { cm.items.Remove(item);return; } });
+            return;
+        }
+        public async Task<IActionResult> Buy(string userid, CartModel cm) { 
+            Order order = new Order();
+            order.Items = cm.items;
+            order.User = new User();
+            order.UserId = userid;
+            order.Date = DateTime.Now;
+            _shopContext.Add(order);
+            await _shopContext.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        public void Clear(CartModel cm) {
+            cm.items.Clear();
+        }
         public void LogIn()
         {
 
         }
-        public void LogOut() { }
+        public void LogOut() {
+        
+        }
         public void SendPM(string message, User user) { 
+
         }
         public void ReadPM(string message, User user) { 
+
         }
         private bool ProductExists(int id)
         {
