@@ -138,6 +138,10 @@ namespace Makeup_1.Controllers
         public void LogOut() {
         
         }
+        public void Register()
+        {
+
+        }
         public void SendPM(string message, User user) { 
 
         }
