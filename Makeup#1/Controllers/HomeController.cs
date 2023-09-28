@@ -45,66 +45,7 @@ namespace Makeup_1.Controllers
         {
 
         }
-        public async Task<IActionResult> Add(string name,string desc,double price,int brandid, string MoU = "") {
-            Product product = new Product();
-            product.Name = name;
-            product.Description = desc;
-            product.Price = price;
-            product.BrandId = brandid;
-            if (MoU != "")
-            {
-                product.MethodOfUse = MoU;
-            }
-            product.Brand = await _shopContext.Brands.FindAsync(brandid);
-            _shopContext.Add(product);
-            await _shopContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        public async Task<IActionResult> Remove(int? id) {
-            if(id == null || _shopContext.Products == null)
-            {
-                return NotFound();
-            }
-            Product? product = await _shopContext.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            _shopContext.Remove(product);
-            await _shopContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        public async Task<IActionResult> Edit(int id, string name, string desc, double price, int brandid, string MoU = "")
-        {
-            Product product = new Product();
-            product.Id = id;
-            product.Name = name;
-            product.Description = desc;
-            product.Price = price;
-            product.BrandId = brandid;
-            if (MoU != "")
-            {
-                product.MethodOfUse = MoU;
-            }
-            product.Brand = await _shopContext.Brands.FindAsync(brandid);
-            try
-            {
-                _shopContext.Update(product);
-                await _shopContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
+       
         public void AddToCart(Product product,int count,string userid,CartModel cm) {
             cm.UserId = userid;
             OrderItem item = new OrderItem();
@@ -148,9 +89,6 @@ namespace Makeup_1.Controllers
         public void ReadPM(string message, User user) { 
 
         }
-        private bool ProductExists(int id)
-        {
-            return _shopContext.Products.Any(p => p.Id == id);
-        }
+
     }
 }
