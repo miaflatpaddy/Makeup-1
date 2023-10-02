@@ -95,6 +95,15 @@ namespace Makeup_1.Controllers
                 return View();
             }
         }
+        private List<Image> Show()
+        {
+            List<Image> Images = new List<Image>();
+            foreach (var item in _shopContext.Images)
+            {
+                Images.Add(item);
+            }
+            return Images;
+        }
 
         private bool Exists(int id)
         {

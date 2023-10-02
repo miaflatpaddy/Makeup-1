@@ -122,6 +122,16 @@ namespace Makeup_1.Controllers
                 return NotFound();
             }
         }
+
+        private List<Product> Show()
+        {
+            List<Product> products = new List<Product>();
+            foreach (var item in _shopContext.Products)
+            {
+                products.Add(item);
+            }
+            return products;
+        }
         private bool ProductExists(int id)
         {
             return _shopContext.Products.Any(p => p.Id == id);

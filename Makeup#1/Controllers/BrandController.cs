@@ -101,9 +101,20 @@ namespace Makeup_1.Controllers
                 return View();
             }
         }
+        private List<Brand> Show()
+        {
+            List<Brand> brands = new List<Brand>();
+            foreach (var item in _shopContext.Brands)
+            {
+                brands.Add(item);
+            }
+            return brands;
+        }
         private bool Exists(int id)
         {
             return _shopContext.Brands.Any(p => p.Id == id);
         }
+
     }
+
 }

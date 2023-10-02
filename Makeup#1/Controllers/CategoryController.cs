@@ -104,6 +104,15 @@ namespace Makeup_1.Controllers
                 return View();
             }
         }
+        private List<Category> Show()
+        {
+            List<Category> categories = new List<Category>();
+            foreach (var item in _shopContext.Categories)
+            {
+                categories.Add(item);
+            }
+            return categories;
+        }
         private bool Exists(int id)
         {
             return _shopContext.Categories.Any(p => p.Id == id);
