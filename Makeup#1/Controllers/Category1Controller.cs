@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace Makeup_1.Controllers
 {
-    public class CategoryController : Controller
+    public class Category1Controller : Controller
     {
         private readonly ShopContext _shopContext;
         // GET: CategoryController

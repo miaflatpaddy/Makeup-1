@@ -7,6 +7,7 @@ namespace Makeup_1.Database
     public class ShopContext : IdentityDbContext<User>
     {
 
+
         public ShopContext(DbContextOptions<ShopContext> options) : base(options) { }
 
         public DbSet<Brand> Brands { get; set; } = default!;
