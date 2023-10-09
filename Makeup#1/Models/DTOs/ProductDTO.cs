@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
+﻿using MakeupClassLibrary.DomainModels;
+using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
-namespace MakeupClassLibrary.DomainModels
+namespace Makeup_1.Models.DTOs
 {
-    public class Product
+    public class ProductDTO
     {
         public int Id { get; set; }
         [Display(Name = "Назва")]
@@ -13,23 +13,16 @@ namespace MakeupClassLibrary.DomainModels
         public string Description { get; set; } = default!;
         [Display(Name = "Рейтинг")]
         public int Rating { get; set; }
-        public List<Comment>? Comments { get; set; }
+        //public List<Comment>? Comments { get; set; }
         [Display(Name = "Ціна")]
         public double Price { get; set; }
         [Display(Name = "Спосіб застосування")]
         public string? MethodOfUse { get; set; }
-        public List<Image>? Images { get; set; }
-        public List<Category>? Categories { get; set; }
-        [Display(Name = "Бренд")]
-        public Brand Brand { get; set; } =default!;
+        //public List<Image>? Images { get; set; }
+        //public List<Category>? Categories { get; set; }
+        //[Display(Name = "Бренд")]
+        //public Brand Brand { get; set; } = default!;
         [Display(Name = "ID Бренду")]
         public int BrandId { get; set; }
-
-        public Product()
-        {
-            Categories = new List<Category>();
-            Images = new List<Image>();
-            Comments = new List<Comment>();
-        }
     }
 }

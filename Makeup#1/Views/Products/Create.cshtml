@@ -1,4 +1,6 @@
-﻿@model MakeupClassLibrary.DomainModels.Product
+﻿@using Makeup_1.Models.ViewModels.ProductViewModels
+@model CreateProductVM
+
 
 @{
     ViewData["Title"] = "Create";
@@ -13,33 +15,47 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Product.Name" class="control-label"></label>
+                <input asp-for="Product.Name" class="form-control" />
+                <span asp-validation-for="Product.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Product.Description" class="control-label"></label>
+                <input asp-for="Product.Description" class="form-control" />
+                <span asp-validation-for="Product.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
+                <label asp-for="Product.Rating" class="control-label"></label>
+                <input asp-for="Product.Rating" class="form-control" />
+                <span asp-validation-for="Product.Rating" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+                <label asp-for="Product.Price" class="control-label"></label>
+                <input asp-for="Product.Price" class="form-control" />
+                <span asp-validation-for="Product.Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MethodOfUse" class="control-label"></label>
-                <input asp-for="MethodOfUse" class="form-control" />
-                <span asp-validation-for="MethodOfUse" class="text-danger"></span>
+                <label asp-for="Product.MethodOfUse" class="control-label"></label>
+                <input asp-for="Product.MethodOfUse" class="form-control" />
+                <span asp-validation-for="Product.MethodOfUse" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BrandId" class="control-label"></label>
-                <select asp-for="BrandId" class ="form-control" asp-items="ViewBag.BrandId"></select>
+                <label asp-for="Product.BrandId" class="control-label"></label>
+                <select asp-for="Product.BrandId" class="form-control" asp-items="Model.Brands"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Categories" class="control-label"></label>
+                @foreach (var category in Model.Categories)
+                {
+                    <div>
+                        <input type="checkbox" name="categories"
+                               value="@category.Id" />
+                        <span class="ms-3">
+                            @category.Name
+                        </span>
+                    </div>
+                }
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Створити" class="btn btn-primary" />
@@ -53,5 +69,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

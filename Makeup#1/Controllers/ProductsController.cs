@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MakeupClassLibrary.DomainModels;
 using Makeup_1.Database;
+using Makeup_1.Models.DTOs;
+using Makeup_1.Models.ViewModels.ProductViewModels;
 
 namespace Makeup_1.Controllers
 {
@@ -36,6 +38,7 @@ namespace Makeup_1.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Brand)
+                .Include(t=>t.Categories)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -46,10 +49,14 @@ namespace Makeup_1.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Country");
-            return View();
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name");
+            ViewBag.Categories = _context.Categories;
+            CreateProductVM createProductVM = new CreateProductVM();
+            createProductVM.Categories = await _context.Categories.ToListAsync();
+            createProductVM.Brands = new SelectList(_context.Brands, "Id", "Name");
+            return View(createProductVM);
         }
 
         // POST: Products/Create
@@ -57,16 +64,35 @@ namespace Makeup_1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Rating,Price,MethodOfUse,BrandId")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Rating,Price,MethodOfUse,BrandId")] ProductDTO product,
+            List<int> categories)
         {
-//            if (ModelState.IsValid)
-//            {
-                _context.Add(product);
+            if (ModelState.IsValid)
+            {
+                Product _product = new Product() { 
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Rating = product.Rating,
+                MethodOfUse = product.MethodOfUse,
+                BrandId = product.BrandId,
+                Price = product.Price,
+                };
+                //List<Category> _categories = new List<Category>();
+                foreach(int categoryId in categories)
+                {
+                    Category? category = await _context.Categories. FindAsync(categoryId);
+                    _product.Categories!.Add(category!);
+                }
+                _context.Add(_product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-//            }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Country", product.BrandId);
-            return View(product);
+            }
+            //ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", product.BrandId);
+            CreateProductVM createProductVM = new CreateProductVM() { Product = new Product() };
+            createProductVM.Categories = await _context.Categories.ToListAsync();
+            createProductVM.Brands = new SelectList(_context.Brands, "Id", "Name");
+            return View(createProductVM);
         }
 
         // GET: Products/Edit/5
@@ -82,7 +108,7 @@ namespace Makeup_1.Controllers
             {
                 return NotFound();
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Country", product.BrandId);
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", product.BrandId);
             return View(product);
         }
 
@@ -91,18 +117,29 @@ namespace Makeup_1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Rating,Price,MethodOfUse,BrandId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Rating,Price,MethodOfUse,BrandId")] ProductDTO product)
         {
             if (id != product.Id)
             {
                 return NotFound();
             }
 
-//            if (ModelState.IsValid)
-//            {
+            if (ModelState.IsValid)
+            {
                 try
                 {
-                    _context.Update(product);
+                    Product _product = new Product()
+                    {
+                        Id = product.Id,
+                        Name = product.Name,
+                        BrandId = product.BrandId,
+                        Description = product.Description,
+                        MethodOfUse = product.MethodOfUse,
+                        Price = product.Price,
+                        Rating = product.Rating
+                    };
+
+                    _context.Update(_product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -117,8 +154,8 @@ namespace Makeup_1.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-//            }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Country", product.BrandId);
+            }
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Name", product.BrandId);
             return View(product);
         }
 

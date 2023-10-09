@@ -106,6 +106,7 @@ namespace Makeup_1.Controllers
             {
                 try
                 {
+                    category.ParentCategoryId = category.ParentCategoryId == 0 ? null : category.ParentCategoryId;
                     _context.Categories.Update(category);
                     await _context.SaveChangesAsync();
                 }
