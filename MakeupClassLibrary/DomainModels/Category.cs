@@ -12,6 +12,7 @@ namespace MakeupClassLibrary.DomainModels
         public int? ParentCategoryId { get; set; }
         public List<Category>? ChildCategories { get; set; }
         public int Id { get; set; }
+        [Display(Name = "Название")]
         public string Name { get; set; } = default!;
 
         public List<Product>? Products { get; set; }

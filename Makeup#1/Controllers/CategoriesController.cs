@@ -106,7 +106,7 @@ namespace Makeup_1.Controllers
             {
                 try
                 {
-                    _context.Update(category);
+                    _context.Categories.Update(category);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

@@ -5,38 +5,39 @@ using Makeup_1.Database;
 
 namespace Makeup_1.Controllers
 {
-    public class ImageController : Controller
+    public class Brand1Controller : Controller
     {
         private readonly ShopContext _shopContext;
-        // GET: ImageController
+        // GET: BrandController
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: ImageController/Details/5
+        // GET: BrandController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: ImageController/Create
+        // GET: BrandController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ImageController/Create
+        // POST: BrandController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string imagepath,string filename)
+        public async Task<IActionResult> Create(string Name, string Country, List<Product> products = null)
         {
             try
             {
-                Image image = new Image();
-                image.Filename = filename;
-                image.ImagePath = imagepath;
-                _shopContext.Images.Add(image);
+                Brand brand = new Brand();
+                brand.Name = Name;
+                brand.Country = Country;
+                brand.Products = products;
+                _shopContext.Brands.Add(brand);
                 await _shopContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -46,23 +47,25 @@ namespace Makeup_1.Controllers
             }
         }
 
-        // GET: ImageController/Edit/5
+        // GET: BrandController/Edit/5**
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ImageController/Edit/5
+        // POST: BrandController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, string imagepath, string filename)
+        public async Task<IActionResult> Edit(int id, string Name, string Country, List<Product> products = null)
         {
             try
             {
-                Image image = new Image();
-                image.Filename = filename;
-                image.ImagePath = imagepath;
-                _shopContext.Images.Update(image);
+                Brand brand = new Brand();
+                brand.Id = id;
+                brand.Name = Name;
+                brand.Country = Country;
+                brand.Products = products;
+                _shopContext.Brands.Update(brand);
                 await _shopContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -72,22 +75,25 @@ namespace Makeup_1.Controllers
             }
         }
 
-        // GET: ImageController/Delete/5
+        // GET: BrandController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: ImageController/Delete/5
+        // POST: BrandController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
-                Image image = await _shopContext.Images.FindAsync(id);
-                _shopContext.Images.Remove(image);
-                await _shopContext.SaveChangesAsync();
+                if(Exists(id))
+                {
+                    Brand brand = await _shopContext.Brands.FindAsync(id);
+                    _shopContext.Brands.Remove(brand);
+                    await _shopContext.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -95,19 +101,20 @@ namespace Makeup_1.Controllers
                 return View();
             }
         }
-        private List<Image> Show()
+        private List<Brand> Show()
         {
-            List<Image> Images = new List<Image>();
-            foreach (var item in _shopContext.Images)
+            List<Brand> brands = new List<Brand>();
+            foreach (var item in _shopContext.Brands)
             {
-                Images.Add(item);
+                brands.Add(item);
             }
-            return Images;
+            return brands;
         }
-
         private bool Exists(int id)
         {
-            return _shopContext.Images.Any(p => p.Id == id);
+            return _shopContext.Brands.Any(p => p.Id == id);
         }
+
     }
+
 }
