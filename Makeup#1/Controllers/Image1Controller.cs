@@ -35,7 +35,7 @@ namespace Makeup_1.Controllers
             {
                 Image image = new Image();
                 image.Filename = filename;
-                image.ImagePath = imagepath;
+//                image.ImagePath = imagepath;
                 _shopContext.Images.Add(image);
                 await _shopContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -61,7 +61,7 @@ namespace Makeup_1.Controllers
             {
                 Image image = new Image();
                 image.Filename = filename;
-                image.ImagePath = imagepath;
+//               image.ImagePath = imagepath;
                 _shopContext.Images.Update(image);
                 await _shopContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -291,7 +291,7 @@ namespace Makeup_1.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    File = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     Filename = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: true)
                 },

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MakeupClassLibrary.DomainModels;
 using Makeup_1.Database;
+using Makeup_1.Models.ViewModels.ImageViewModels;
 
 namespace Makeup_1.Controllers
 {
@@ -48,7 +49,9 @@ namespace Makeup_1.Controllers
         // GET: Images/Create
         public IActionResult Create()
         {
-            return View();
+            CreateImageViewModel model = new CreateImageViewModel();
+
+            return View(model);
         }
 
         // POST: Images/Create
@@ -56,15 +59,28 @@ namespace Makeup_1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ImagePath,Filename")] Image image)
+        public async Task<IActionResult> Create([Bind("Filename,Image")] CreateImageViewModel createVM)
         {
+   
+
             if (ModelState.IsValid)
             {
+                if(await _context.Images.FirstOrDefaultAsync(m => m.Filename == createVM.Filename) != null)
+                {
+                    return View(createVM);
+                }
+                byte[]? data = null;
+                using (BinaryReader br = new BinaryReader(createVM.Image.OpenReadStream()))
+                {
+                    data = br.ReadBytes((int)createVM.Image.Length);
+
+                }
+                Image image = new Image() { File = data, Filename = createVM.Filename };
                 _context.Add(image);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(image);
+            return View(createVM);
         }
 
         // GET: Images/Edit/5
@@ -76,11 +92,16 @@ namespace Makeup_1.Controllers
             }
 
             var image = await _context.Images.FindAsync(id);
+
             if (image == null)
             {
                 return NotFound();
             }
-            return View(image);
+            EditImageVM editimage = new EditImageVM()
+            {
+                image = image
+            };
+            return View(editimage);
         }
 
         // POST: Images/Edit/5
@@ -149,6 +170,7 @@ namespace Makeup_1.Controllers
             if (image != null)
             {
                 _context.Images.Remove(image);
+
             }
             
             await _context.SaveChangesAsync();

@@ -24,4 +24,8 @@
     <ProjectReference Include="..\MakeupClassLibrary\MakeupClassLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Uploads\" />
+  </ItemGroup>
+
 </Project>
