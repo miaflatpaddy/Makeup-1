@@ -99,7 +99,9 @@ namespace Makeup_1.Controllers
             }
             EditImageVM editimage = new EditImageVM()
             {
-                image = image
+                File = image.File,
+                Filename = image.Filename,
+                Id = image.Id
             };
             return View(editimage);
         }
@@ -109,15 +111,28 @@ namespace Makeup_1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ImagePath,Filename")] Image image)
+        public async Task<IActionResult> Edit(int id ,[Bind("Id,File,Filename, formFile")] EditImageVM VM)
         {
-            if (id != image.Id)
+            if (id != VM.Id)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
+                Image image = new Image();
+                image.Filename = VM.Filename;
+                image.Id = VM.Id;
+                image.File = VM.File;
+                if (VM.formFile != null)
+                {
+                    byte[]? data = null;
+                    using (BinaryReader br = new BinaryReader(VM.formFile.OpenReadStream()))
+                    {
+                        data = br.ReadBytes((int)VM.formFile.Length);
+                        image.File = data;
+                    }
+                }
                 try
                 {
                     _context.Update(image);
@@ -136,7 +151,7 @@ namespace Makeup_1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(image);
+            return View(VM);
         }
 
         // GET: Images/Delete/5

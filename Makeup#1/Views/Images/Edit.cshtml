@@ -12,17 +12,18 @@
     <div class="col-md-4">
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="image.Id" />
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="File" />
             <div class="form-group">
-                <label asp-for="image.Filename" class="control-label"></label>
-                <input asp-for="image.Filename" class="form-control" />
-                <span asp-validation-for="image.Filename" class="text-danger"></span>
+                <label asp-for="Filename" class="control-label"></label>
+                <input asp-for="Filename" class="form-control" />
+                <span asp-validation-for="Filename" class="text-danger"></span>
             </div>
+            <img src="data:image/*;base64,@(Convert.ToBase64String(@Model.File!))" class="card-img-bottom" alt="@Model.Filename">
             <div class="form-group">
-                <label asp-for="image.File" class="control-label"></label>
-                <img src="data:image/*;base64,@(Convert.ToBase64String(@Model.image.File!))" class="card-img-bottom" alt="@Model.image.Filename">
-                <input asp-for="image.File" type="file" class="form-control" />
-                <span asp-validation-for="image.File" class="text-danger"></span>
+                <label asp-for="File" class="control-label"></label>
+                <input asp-for="formFile" type="file" class="form-control" />
+                <span asp-validation-for="formFile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Зберегти" class="btn btn-primary" />
