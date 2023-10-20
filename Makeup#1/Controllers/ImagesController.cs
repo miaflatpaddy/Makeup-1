@@ -23,9 +23,10 @@ namespace Makeup_1.Controllers
         // GET: Images
         public async Task<IActionResult> Index()
         {
-              return _context.Images != null ? 
-                          View(await _context.Images.ToListAsync()) :
-                          Problem("Entity set 'ShopContext.Images'  is null.");
+            //      return _context.Images.Count() !=0 ? 
+            //                  View(await _context.Images.ToListAsync()) :
+            //                  Problem("Entity set 'ShopContext.Images'  is null.");
+            return View( await _context.Images.ToListAsync());
         }
 
         // GET: Images/Details/5
@@ -50,7 +51,8 @@ namespace Makeup_1.Controllers
         public IActionResult Create()
         {
             CreateImageViewModel model = new CreateImageViewModel();
-
+            SelectList categories = new SelectList(_context.Categories.ToList(), nameof(Category.Id), nameof(Category.Name));
+            model.Categories = categories;
             return View(model);
         }
 
@@ -59,7 +61,7 @@ namespace Makeup_1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Filename,Image")] CreateImageViewModel createVM)
+        public async Task<IActionResult> Create([Bind("Filename,Image, ProductId")] CreateImageViewModel createVM)
         {
    
 
@@ -69,14 +71,17 @@ namespace Makeup_1.Controllers
                 {
                     return View(createVM);
                 }
-                byte[]? data = null;
-                using (BinaryReader br = new BinaryReader(createVM.Image.OpenReadStream()))
+                foreach (IFormFile img in createVM.Image)
                 {
-                    data = br.ReadBytes((int)createVM.Image.Length);
+                    byte[]? data = null;
+                    using (BinaryReader br = new BinaryReader(img.OpenReadStream()))
+                    {
+                        data = br.ReadBytes((int)img.Length);
 
+                    }
+                    Image image = new Image() { File = data, Filename = img.FileName, ProductId = createVM.ProductId };
+                    _context.Add(image);
                 }
-                Image image = new Image() { File = data, Filename = createVM.Filename };
-                _context.Add(image);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -195,6 +200,16 @@ namespace Makeup_1.Controllers
         private bool ImageExists(int id)
         {
           return (_context.Images?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> getProductByCategory(int id)
+        {
+            var selectedCategory = await _context.Categories.FindAsync(id);
+            if (selectedCategory != null) {
+                var products = _context.Products.Where(t => t.Categories.Contains(selectedCategory));
+                return PartialView(products);
+            }
+            else { return NotFound(); }
         }
     }
 }

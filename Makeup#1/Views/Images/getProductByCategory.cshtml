@@ -1,0 +1,10 @@
+﻿@using MakeupClassLibrary.DomainModels
+@model IEnumerable<Product>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@*<div class="*">*@
+    <label> Продукти</label>
+    <select asp-items="@(new SelectList(Model, nameof(Product.Id), nameof(Product.Name)))" name="ProductId"
+            class="form-select" name="ProductId"></select>
+@*</div>*@

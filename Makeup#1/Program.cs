@@ -1,9 +1,16 @@
+using Makeup_1.CustomPolicies;
 using Makeup_1.Database;
+using Makeup_1.Serivces;
 using MakeupClassLibrary.DomainModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 builder.Services.AddDistributedMemoryCache();
 
 
@@ -15,6 +22,8 @@ builder.Services.AddDbContext<ShopContext>(options => {
         builder.Configuration
         .GetConnectionString("MakeupDB"));
 });
+builder.Services.AddTransient<IAuthorizationHandler, AllowUserHandler>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(10);
@@ -32,6 +41,19 @@ builder.Services
     })
     .AddEntityFrameworkStores<ShopContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddAuthentication()
+    .AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+        googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+        googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddFacebook(fbOptions =>
+    {
+        IConfigurationSection fbAuthSection = configuration.GetSection("Authentication:Facebook");
+        fbOptions.AppId = fbAuthSection.GetSection("AppId").Value;
+        fbOptions.AppSecret = fbAuthSection.GetSection("AppSecret").Value;
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

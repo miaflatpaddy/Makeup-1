@@ -10,5 +10,10 @@ namespace MakeupClassLibrary.DomainModels
         public byte[]? File { get; set; }
         [Display(Name = "Ім'я файлу")]
         public string Filename { get; set; } = default!;
+
+        public int ProductId { get; set; }
+
+        public Product Product { get; set; } = default!;
+
     }
 }

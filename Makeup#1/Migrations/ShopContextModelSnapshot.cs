@@ -123,15 +123,14 @@ namespace Makeup_1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<byte[]>("File")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Filename")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -472,9 +471,13 @@ namespace Makeup_1.Migrations
 
             modelBuilder.Entity("MakeupClassLibrary.DomainModels.Image", b =>
                 {
-                    b.HasOne("MakeupClassLibrary.DomainModels.Product", null)
+                    b.HasOne("MakeupClassLibrary.DomainModels.Product", "Product")
                         .WithMany("Images")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("MakeupClassLibrary.DomainModels.Order", b =>
