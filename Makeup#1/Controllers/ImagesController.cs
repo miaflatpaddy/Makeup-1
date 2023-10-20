@@ -106,7 +106,8 @@ namespace Makeup_1.Controllers
             {
                 File = image.File,
                 Filename = image.Filename,
-                Id = image.Id
+                Id = image.Id,
+                ProductId = image.ProductId,
             };
             return View(editimage);
         }
@@ -129,6 +130,7 @@ namespace Makeup_1.Controllers
                 image.Filename = VM.Filename;
                 image.Id = VM.Id;
                 image.File = VM.File;
+                image.ProductId = VM.ProductId;
                 if (VM.formFile != null)
                 {
                     byte[]? data = null;
@@ -140,7 +142,7 @@ namespace Makeup_1.Controllers
                 }
                 try
                 {
-                    _context.Update(image);
+                    _context.Images.Update(image);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

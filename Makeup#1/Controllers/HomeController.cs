@@ -1,5 +1,7 @@
 ﻿using Makeup_1.Database;
+using Makeup_1.Extensions;
 using Makeup_1.Models;
+using Makeup_1.Models.ViewModels;
 using MakeupClassLibrary.DomainModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +20,22 @@ namespace Makeup_1.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            IQueryable<Product> products = _shopContext.Products.Include(t=>t.Brand).Include(t=>t.Images);
+            HomeVievModel model = new HomeVievModel();
+            model.products = await products.ToListAsync();
+            IEnumerable<CartItem> items = HttpContext.Session.Get<IEnumerable<CartItem>>("cart");
+            if (items == null)
+            {
+                items = new List<CartItem>();
+                HttpContext.Session.Set<IEnumerable<CartItem>>("cart", items);
+            }
+            Cart cart = new Cart();
+            cart.AddItems(items);
+
+            model.cart = new Cart();
+            return View(model);
         }
 
         public IActionResult Privacy()

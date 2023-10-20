@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using Makeup_1.Models;
 using Makeup_1.Models.ViewModels.CartVievModels;
+using MailKit.Security;
 
 namespace Makeup_1.Controllers
 {
@@ -23,9 +24,9 @@ namespace Makeup_1.Controllers
             this.emailService = emailService;
             this.userManager = userManager;
         }
-        public IActionResult Index(Cart cart, string returnUrl)
+        public IActionResult Index(string returnUrl)
         {
-            //Cart cart = GetCart();
+            Cart cart = GetCart();
             return View(new CartIndexViewModel { Cart = cart, ReturnUrl = returnUrl });
         }
         [HttpPost]
@@ -82,22 +83,47 @@ namespace Makeup_1.Controllers
             HttpContext.Session.Set<IEnumerable<CartItem>>("cart", cart.CartItems);
         }
         [HttpPost]
-        public async Task<IActionResult> ConfirmOrder(Cart cart, string returnUrl)
+
+        public async Task<IActionResult> ConfirmOrder( string returnUrl)
         {
+            string password = "nfvdhoufxntbhlbk";
+            Cart cart = GetCart();
             StringBuilder builder = new StringBuilder();
             User user = await userManager.FindByNameAsync(User.Identity.Name);
             string emailTo = user.Email;
             builder.Append("<h3>Ваш заказ: </h3><ul>");
             builder.Append("<ul>");
             int i = 0;
+            //Order order = new Order();
+            //order.Items = new List<OrderItem>();
+            Order order = new Order();
+            order.UserId = user.Id;
+            order.Date = DateTime.Now;
             foreach (CartItem item in cart.CartItems)
             {
                 builder.Append($"<li>{++i}. {item.Product.Name} - {item.Quantity} шт: {item.Product.Price} грн. </li>");
+               
+                OrderItem orderItem = new OrderItem();
+                orderItem.ProductId = item.Product.Id;
+                orderItem.quantity = item.Quantity;
+                order.Items.Add(orderItem);
+                //orderItem.Product = item.Product;
+                //orderItem.quantity = item.Quantity;
+                //orderItem.ProductId = item.Product.Id;
+                //context.OrderItems.Add(orderItem);
+                //await context.SaveChangesAsync();
+                //order.Items.Add(orderItem);
             }
             builder.Append("</ul>");
             builder.Append($"<h4>Итого:{cart.GetTotalSum()} грн. </h4>");
-            await emailService.SendAsync("serhii.ruban81@gmail.com", emailTo, "Ваш заказан №237815 подтвержден", builder.ToString());
+            await emailService.SendAsync("kurisumakise33@gmail.com", emailTo, "Ваш заказан №237815 подтвержден", builder.ToString());
+            //order.User = user;
+            //order.UserId = user.Id;
+            //order.Date = DateTime.Now;
+            context.Orders.Add(order);
+            await context.SaveChangesAsync();
             cart.Clear();
+
             return Redirect(returnUrl);
         }
     }

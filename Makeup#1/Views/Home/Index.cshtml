@@ -1,4 +1,7 @@
-﻿@{
+﻿@using MakeupClassLibrary.DomainModels
+@using Makeup_1.Models.ViewModels
+@model HomeVievModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -11,4 +14,29 @@
     <a href="/Products/index">Продукты</a>
 
 
+</div>
+<div class="container">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+        @foreach(Product product in Model.products)
+        {
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    @if(@product.Images.Count>=1){
+                    <img src="data:image/png;base64,@(Convert.ToBase64String(product.Images?.FirstOrDefault()!.File))" class="card-img-top" alt="@product.Name">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Brand.Name</p>
+                        <form asp-action="AddToCart" asp-controller="Cart">
+                            <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)">
+                            <input type="hidden" name="id" value="@product.Id">
+                            <input type="hidden" name="cart" value="@Model.cart">
+                            <input type="submit" value="Додати до корзини" class="btn btn-primary">
+                        </form>
+                       
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

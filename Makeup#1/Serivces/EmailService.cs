@@ -47,7 +47,7 @@ namespace Makeup_1.Serivces
             using var smtp = new SmtpClient();
             await smtp.ConnectAsync(smtpHiddenInfo.Host, smtpHiddenInfo.Port, (SecureSocketOptions)smtpHiddenInfo.SecureSocketOptions);
             //await smtp.AuthenticateAsync(smtpHiddenInfo.User, smtpHiddenInfo.Password);
-            await smtp.AuthenticateAsync(smtpHiddenInfo.User, "qlhetyzgotypnsqb");
+            await smtp.AuthenticateAsync(smtpHiddenInfo.User, smtpHiddenInfo.Password);
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
         }

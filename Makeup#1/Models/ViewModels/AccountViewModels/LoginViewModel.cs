@@ -19,6 +19,6 @@ namespace Makeup_1.Models.ViewModels.AccountViewModels
         [Display(Name = "Залишатись в системі?")]
         public bool IsPersistent { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public string? ReturnUrl { get; set; }
     }
 }
