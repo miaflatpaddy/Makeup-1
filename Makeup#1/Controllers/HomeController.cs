@@ -34,7 +34,7 @@ namespace Makeup_1.Controllers
             Cart cart = new Cart();
             cart.AddItems(items);
 
-            model.cart = new Cart();
+            model.cart = cart;
             return View(model);
         }
 

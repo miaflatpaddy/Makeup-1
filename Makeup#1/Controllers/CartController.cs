@@ -35,8 +35,9 @@ namespace Makeup_1.Controllers
             Product product = await context.Products.FindAsync(id);
             if (product != null)
             {
-                cart.AddItem(product, 1);
-                UpdateCart(cart);
+                Cart cart_ = GetCart();
+                cart_.AddItem(product, 1);
+                UpdateCart(cart_);
             }
             return RedirectToAction("Index", new { returnUrl });
         }
