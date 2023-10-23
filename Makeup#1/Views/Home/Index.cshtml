@@ -16,7 +16,7 @@
                     <input type="hidden" name="id" value="@product.Id">
                     <input type="hidden" name="cart" value="@Model.cart">
                     <div class="my-card my-4">
-                        <img src="images/scrab.svg" alt="scrab">
+@*                       <img src="images/scrab.svg" alt="scrab">*@
                         @if (@product.Images.Count >= 1)
                         {
                             <img src="data:image/png;base64,@(Convert.ToBase64String(product.Images?.FirstOrDefault()!.File))" class="card-img-top" alt="@product.Name">
