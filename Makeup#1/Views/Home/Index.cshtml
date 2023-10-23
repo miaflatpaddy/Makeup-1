@@ -1,5 +1,5 @@
-﻿@using MakeupClassLibrary.DomainModels
-@using Makeup_1.Models.ViewModels
+﻿@using Makeup_1.Models.ViewModels
+@using System.Text
 @model HomeVievModel
 @{
     ViewData["Title"] = "Home Page";
@@ -11,22 +11,21 @@
         @foreach (Product product in Model.products)
         {
             <div class="col">
-                <form asp-action="AddToCart" asp-controller="Cart">
-                    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)">
-                    <input type="hidden" name="id" value="@product.Id">
-                    <input type="hidden" name="cart" value="@Model.cart">
+                <a asp-action="Details" asp-route-id="@product.Id">
+                
                     <div class="my-card my-4">
-                        <img src="images/scrab.svg" alt="scrab">
                         @if (@product.Images.Count >= 1)
                         {
-                            <img src="data:image/png;base64,@(Convert.ToBase64String(product.Images?.FirstOrDefault()!.File))" class="card-img-top" alt="@product.Name">
+                            <img src="data:image/*;base64,@(Convert.ToBase64String(product.Images?.FirstOrDefault()!.File))" class="card-img-top" alt="@product.Name">
+                           
                         }
                         <div class="card-text mb-4">@product.Name</div>
                         <div class="card-price ">>@product.Price грн.</div>
                         <span class="bestseller-text">best seller</span>
-                        <button type="submit"><img class="my-card-heart" src="~/images/heart2.svg" alt="favorites"></button>
+                      @*   <button type="submit"><img class="my-card-heart" src="~/images/heart2.svg" alt="favorites"></button> *@
                     </div>
-                </form>
+                </a>
+                @* </form> *@
             </div>
         }
     </div>

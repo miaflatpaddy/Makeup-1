@@ -203,7 +203,6 @@
             padding: 3px;
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px;
-            /* heart (3) 1 */
         }
 
         .my-card-heart {
@@ -211,6 +210,17 @@
             left: 215px;
             top: 20.33px;
         }
+
+        .card-link {
+            text-decoration: none;
+            color: black;
+        }
+        /* ====================Product Details===================== */
+        .product-details{
+            display: flex;
+            flex-direction: column;
+        }
+
     </style>
 </head>
 
@@ -265,8 +275,10 @@
                         </div>
                         <div class="icons">
                             <img src="images/user.png" width="25" class="me-2">
-                            <img src="images/shopping.png" width="25" class="me-2"></img>
-                            <img src='images/heart.png' width="25"></img>
+                        
+                               
+                            <a asp-action="Index" asp-controller="Cart"><img src="images/shopping.png" width="25" class="me-2"> </a>
+                            <img src='images/heart.png' width="25">
                         </div>
                     </div>
                     <div class="AllBottomSide">

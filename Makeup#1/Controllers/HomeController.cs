@@ -2,6 +2,7 @@
 using Makeup_1.Extensions;
 using Makeup_1.Models;
 using Makeup_1.Models.ViewModels;
+using Makeup_1.Models.ViewModels.CartVievModels;
 using MakeupClassLibrary.DomainModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,22 +26,25 @@ namespace Makeup_1.Controllers
             IQueryable<Product> products = _shopContext.Products.Include(t=>t.Brand).Include(t=>t.Images);
             HomeVievModel model = new HomeVievModel();
             model.products = await products.ToListAsync();
-            IEnumerable<CartItem> items = HttpContext.Session.Get<IEnumerable<CartItem>>("cart");
-            if (items == null)
-            {
-                items = new List<CartItem>();
-                HttpContext.Session.Set<IEnumerable<CartItem>>("cart", items);
-            }
-            Cart cart = new Cart();
-            cart.AddItems(items);
-
-            model.cart = new Cart();
+            model.cart = GetCart();
             return View(model);
         }
 
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Details(int? id, string? returnUrl)
+        {
+            if (id == null)
+                return RedirectToAction("Index");
+            Product? product = await _shopContext.Products.FindAsync(id);
+            CartDetailsViewModel model = new CartDetailsViewModel();
+            model.Product = product;
+            model.Cart = GetCart();
+            model.ReturnUrl = returnUrl;
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -86,6 +90,19 @@ namespace Makeup_1.Controllers
         }
         public void Clear(CartModel cm) {
             cm.items.Clear();
+        }
+
+        public Cart GetCart()
+        {
+            IEnumerable<CartItem> items = HttpContext.Session.Get<IEnumerable<CartItem>>("cart");
+            if (items == null)
+            {
+                items = new List<CartItem>();
+                HttpContext.Session.Set<IEnumerable<CartItem>>("cart", items);
+            }
+            Cart cart = new Cart();
+            cart.AddItems(items);
+            return cart;
         }
         public void LogIn()
         {

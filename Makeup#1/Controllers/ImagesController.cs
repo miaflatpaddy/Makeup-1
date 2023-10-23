@@ -52,7 +52,9 @@ namespace Makeup_1.Controllers
         {
             CreateImageViewModel model = new CreateImageViewModel();
             SelectList categories = new SelectList(_context.Categories.ToList(), nameof(Category.Id), nameof(Category.Name));
+            //SelectList products = new SelectList(_context.Products.ToList(), nameof(Product.Id), nameof(Product.Name));
             model.Categories = categories;
+            //model.Products = products;
             return View(model);
         }
 
