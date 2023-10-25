@@ -13,7 +13,7 @@ namespace Makeup_1.Models.ViewModels.RoleViewModels
         public string Login { get; set; }
         public string Email { get; set; }
 
-        public List<IdentityRole> AllRoles { get; set; }
+        public List<IdentityRole>? AllRoles { get; set; }
 
         public IList<string> UserRoles { get; set; }
     }

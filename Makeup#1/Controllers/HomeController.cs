@@ -4,6 +4,7 @@ using Makeup_1.Models;
 using Makeup_1.Models.ViewModels;
 using Makeup_1.Models.ViewModels.CartVievModels;
 using MakeupClassLibrary.DomainModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -14,11 +15,13 @@ namespace Makeup_1.Controllers
     {
         private readonly ShopContext _shopContext;
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<User> userManager;
 
-        public HomeController(ShopContext shopContext,ILogger<HomeController> logger)
+        public HomeController(ShopContext shopContext,ILogger<HomeController> logger, UserManager<User> userManager)
         {
             _shopContext = shopContext;
             _logger = logger;
+            this.userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -40,6 +43,7 @@ namespace Makeup_1.Controllers
             if (id == null)
                 return RedirectToAction("Index");
             Product? product = await _shopContext.Products.FindAsync(id);
+            await _shopContext.Entry(product).Collection(t => t.Comments).LoadAsync();
             CartDetailsViewModel model = new CartDetailsViewModel();
             model.Product = product;
             model.Cart = GetCart();
@@ -60,9 +64,21 @@ namespace Makeup_1.Controllers
         {
             return new List<Product>();
         }
-        public void SendComment(string comment)
+        [HttpPost]
+        public async Task<IActionResult> AddComment(string title, string description, int productId, string returnUrl)
         {
-
+            string userId = userManager.GetUserId(User);
+            Comment comment1 = new Comment()
+            {
+                UserId = userId,
+                ProductId = productId,
+                Title = title,
+                Created = DateTime.Now,
+                Description= description
+            };
+            await _shopContext.Comments.AddAsync(comment1);
+            await _shopContext.SaveChangesAsync(); 
+            return Redirect(returnUrl);
         }
        
         public void AddToCart(Product product,int count,string userid,CartModel cm) {

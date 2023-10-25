@@ -90,6 +90,7 @@ namespace Makeup_1.Controllers
                 await userManager.RemoveFromRolesAsync(user, deletedRoles);
                 return RedirectToAction("UserList");
             }
+            model.AllRoles = await roleManager.Roles.ToListAsync(); 
             return View(model);
         }
     }

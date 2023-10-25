@@ -23,4 +23,24 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <form method="post" asp-action="AddComment">
+                <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)">
+            <input type="hidden" value="@Model.Product.Id" name="productId" />
+            <label>Title</label>
+            <input type="text" name="title" />
+                <label>Description</label>
+            <textarea name="description"></textarea>
+            <input type="submit" value="Send Comment" class="btn btn-snm btn-secondary"/>
+        </form>
+        </div>
+        
+    </div>
+    <div class="row">
+        @foreach(Comment comment in Model.Product.Comments)
+        {
+            <div>@comment.Title</div>
+        }
+    </div>
 </div>
