@@ -53,7 +53,7 @@ namespace Makeup_1.Controllers
             model.Product = product;
             model.Cart = GetCart();
             model.ReturnUrl = returnUrl;
-            model.comment = new Models.DTOs.CommentDTO();
+            model.comment = new CommentDTO();
             return View(model);
 
         }
