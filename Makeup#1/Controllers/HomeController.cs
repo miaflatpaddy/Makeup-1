@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using Makeup_1.Models.DTOs;
 
 namespace Makeup_1.Controllers
 {
@@ -44,11 +45,17 @@ namespace Makeup_1.Controllers
                 return RedirectToAction("Index");
             Product? product = await _shopContext.Products.FindAsync(id);
             await _shopContext.Entry(product).Collection(t => t.Comments).LoadAsync();
+            foreach (var item in product.Comments)
+            {
+                item.User = await _shopContext.Users.FindAsync(item.UserId);
+            }
             CartDetailsViewModel model = new CartDetailsViewModel();
             model.Product = product;
             model.Cart = GetCart();
             model.ReturnUrl = returnUrl;
+            model.comment = new Models.DTOs.CommentDTO();
             return View(model);
+
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -65,45 +72,45 @@ namespace Makeup_1.Controllers
             return new List<Product>();
         }
         [HttpPost]
-        public async Task<IActionResult> AddComment(string title, string description, int productId, string returnUrl)
+        public async Task<IActionResult> AddComment(CommentDTO comment)
         {
             string userId = userManager.GetUserId(User);
             Comment comment1 = new Comment()
             {
                 UserId = userId,
-                ProductId = productId,
-                Title = title,
+                ProductId = comment.productId,
+                Title = comment.title,
                 Created = DateTime.Now,
-                Description= description
+                Description = comment.content
             };
             await _shopContext.Comments.AddAsync(comment1);
             await _shopContext.SaveChangesAsync(); 
-            return Redirect(returnUrl);
+            return Redirect(comment.returnUrl);
         }
        
-        public void AddToCart(Product product,int count,string userid,CartModel cm) {
-            cm.UserId = userid;
-            OrderItem item = new OrderItem();
-            item.ProductId = product.Id;
-            item.quantity = count;
-            item.Product = product;
-            cm.items.Add(item);
+        //public void AddToCart(Product product,int count,string userid,CartModel cm) {
+        //    cm.UserId = userid;
+        //    OrderItem item = new OrderItem();
+        //    item.ProductId = product.Id;
+        //    item.quantity = count;
+        //    item.Product = product;
+        //    cm.items.Add(item);
 
-        }
-        public void RemoveFromCart(CartModel cm,Product product) {
-            cm.items.ForEach(item => { if (item.ProductId == product.Id) { cm.items.Remove(item);return; } });
-            return;
-        }
-        public async Task<IActionResult> Buy(string userid, CartModel cm) { 
-            Order order = new Order();
-            order.Items = cm.items;
-            order.User = new User();
-            order.UserId = userid;
-            order.Date = DateTime.Now;
-            _shopContext.Add(order);
-            await _shopContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //}
+        //public void RemoveFromCart(CartModel cm,Product product) {
+        //    cm.items.ForEach(item => { if (item.ProductId == product.Id) { cm.items.Remove(item);return; } });
+        //    return;
+        //}
+        //public async Task<IActionResult> Buy(string userid, CartModel cm) { 
+        //    Order order = new Order();
+        //    order.Items = cm.items;
+        //    order.User = new User();
+        //    order.UserId = userid;
+        //    order.Date = DateTime.Now;
+        //    _shopContext.Add(order);
+        //    await _shopContext.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
         public void Clear(CartModel cm) {
             cm.items.Clear();
         }
