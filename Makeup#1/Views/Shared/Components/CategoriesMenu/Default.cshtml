@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Category>
+<div class="col downBlockHeader">
+    <ul class="bottomBtn bottomHeaderBtn mb-0 ps-0 me-3">
+        @foreach (Category category in Model)
+        {
+            <li class="nav-item dropdown">
+
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">
+                    @category.Name
+                </a>
+                @if (category.ChildCategories != null && category.ChildCategories.Count > 0)
+                {
+                    <ul class="dropdown-menu">
+                        @foreach (Category child in category.ChildCategories)
+                        {
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    @child.Name
+                                    @if (child.ChildCategories != null && child.ChildCategories.Count > 0)
+                                    {
+                                        <img src="images/Vector 9.svg" alt="arrow up" />
+                                    }
+                                </a>
+                                @if (child.ChildCategories != null && child.ChildCategories.Count > 0)
+                                {
+                                    <ul>
+                                        @foreach (Category grandChild in child.ChildCategories)
+                                        {
+                                            <li><a href="#">@grandChild.Name</a></li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+    </ul>
+</div>

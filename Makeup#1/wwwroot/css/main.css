@@ -1,0 +1,407 @@
+﻿html,
+body {
+    height: 100%;
+    background-color: #f5f2ed;
+}
+
+.main_div {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 1 auto;
+}
+
+.containerMain {
+    background-color: #f5f2ed;
+}
+
+.mainDivHeader {
+    background-color: #8d9890;
+}
+
+.upHeaderBlock {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.bottomBtnInTop {
+    display: none;
+}
+
+.navbar {
+    background-color: #8d9890;
+}
+
+.nav-link {
+    color: white !important;
+    font-size: 14px !important;
+}
+
+.textBlock {
+    display: flex;
+    margin-left: 15%;
+    font-size: 14px;
+    align-items: center;
+    color: white;
+}
+
+.LangBlock {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    color: white;
+}
+
+.langUa {
+    color: rgb(213, 213, 213);
+}
+
+.centerHeaderBlock {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 5px solid white;
+    border-bottom: 5px solid white;
+}
+
+.searchBlock {
+    display: flex;
+    align-items: center;
+    margin-left: 10%;
+    justify-content: right;
+}
+
+.formRow {
+    width: 250px;
+}
+
+.form-control {
+    background-color: #8d9890 !important;
+}
+
+    .form-control::placeholder {
+        color: white !important;
+    }
+
+.styleBtn {
+    color: white !important;
+    border: 1px solid rgb(226, 226, 226) !important;
+}
+
+.imgBrandBlock {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.brandSize {
+    width: 120px;
+    margin-left: 35%;
+}
+
+.iconBlock {
+    display: flex;
+    align-items: center;
+    width: 30%;
+    justify-content: left;
+}
+
+.imgBtnCenter {
+    width: 25px;
+}
+
+.bottomBtn {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.bottomHeaderBtn {
+    color: white;
+}
+
+.droppBottomMenu {
+    display: none;
+}
+
+.footerStyle {
+    background-color: #8d9890;
+}
+
+.colStyleLogo {
+    display: flex;
+    justify-content: center;
+}
+
+.colStyle1 {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+.colStyle2 {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+}
+
+.colStyle3 {
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.info {
+    font-size: 16px;
+}
+
+.linkFooterStyle {
+    text-decoration: none;
+    color: white;
+}
+
+.number {
+    font-size: 24px;
+}
+
+@media screen and (max-width: 992px) {
+    .bottomBtnInTop {
+        display: block;
+    }
+
+    .bottomBtn {
+        display: none;
+    }
+
+    .textBlock {
+        width: fit-content;
+        align-items: start;
+        margin-left: auto;
+    }
+
+    .LangBlock {
+        align-items: start;
+    }
+
+    .nav-link {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .bottomHeaderBtn {
+        font-size: 14px;
+    }
+
+    .centerHeaderBlock {
+        justify-content: space-between;
+    }
+
+    .searchBlock {
+        margin-left: 0;
+    }
+
+    .imgBrandBlock {
+        width: fit-content;
+        margin-right: 15%;
+    }
+
+    .brandSize {
+        margin-left: 0;
+    }
+
+    .iconBlock {
+        width: fit-content;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .wrapperCard {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .wrapperCard {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.show {
+    padding-top: 10px !important;
+}
+
+.btn {
+    padding: 2px !important;
+}
+
+.cardBlock {
+    flex-direction: column;
+}
+
+.cardExample {
+    display: flex;
+    width: 100%;
+}
+
+.cardMain {
+    position: relative;
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    justify-content: center;
+    align-items: center;
+}
+
+.wrapperCard {
+    display: flex;
+    flex-direction: column;
+    width: 320px;
+    padding: 10px;
+}
+
+.bestSeller {
+    background-color: #8d9890;
+    color: white;
+    padding: 2px 5px 2px 5px;
+    position: absolute;
+    top: 20px;
+    left: 25px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.heartSeller {
+    position: absolute;
+    top: 18px;
+    right: 35px;
+}
+
+.imgCard {
+    display: flex;
+    width: fit-content;
+}
+
+.imgPropert {
+    width: 250px;
+}
+
+.textCard {
+    font-weight: 500;
+    padding: 20px;
+}
+
+.moneyBlock {
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+}
+
+.btnArrow {
+    display: flex;
+    justify-content: space-between;
+}
+
+.makeUp {
+    flex-direction: column;
+}
+
+.nameBlock {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
+}
+
+.photoCosmetic {
+    padding: 0 35px 0 35px;
+    justify-content: center;
+}
+
+.phot1 {
+    display: flex;
+    flex-direction: column;
+}
+
+.aboutShop {
+    background-color: #ded8d0;
+    padding: 40px;
+    border-top-right-radius: 35px;
+    border-bottom-left-radius: 35px;
+    padding-bottom: 50px;
+}
+
+.shopName {
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.colorNameShop {
+    color: #8d9890;
+    margin-bottom: 30px;
+}
+
+.caruselWrapper {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.carousel {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.imgCarusel {
+    border-radius: 25px !important;
+}
+/* My styles */
+ul.dropdown-menu.show {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    background-color: rgba(222, 216, 208, 1);
+    top: 6px !important;
+    /* transform: translate(0px, 40px); */
+}
+
+ul.dropdown-menu > li > a {
+    color: rgba(141, 152, 144, 1);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+ul.bottomBtn {
+    list-style-type: none;
+}
+
+ul.dropdown-menu ul {
+    list-style-type: none;
+}
+
+    ul.dropdown-menu ul li {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        margin-left: -32px;
+        padding-left: 32px;
+    }
+
+        ul.dropdown-menu ul li:hover {
+            background-color: white;
+        }
+
+    ul.dropdown-menu ul a {
+        text-decoration: none;
+        font-weight: 400;
+        font-size: 15px;
+        color: black;
+    }
