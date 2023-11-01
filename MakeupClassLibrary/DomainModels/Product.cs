@@ -14,6 +14,7 @@ namespace MakeupClassLibrary.DomainModels
         [Display(Name = "Рейтинг")]
         public int Rating { get; set; }
         public List<Comment>? Comments { get; set; }
+        public List<Question>? Questions { get; set; }
         [Display(Name = "Ціна")]
         public double Price { get; set; }
         [Display(Name = "Спосіб застосування")]
