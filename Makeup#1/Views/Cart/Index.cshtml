@@ -3,7 +3,7 @@
 @{
     int i = 0;
 }
-<div class="container">
+@* <div class="container">
     <div class="row">
         <h2>Корзина</h2>
         <div class="col-3"></div>
@@ -49,4 +49,105 @@
             <button type="submit" class="btn btn-sm btn-success">Оформити замовлення</button>
         </form>
     </div>
+</div> *@
+@section PageStyles{
+    <style>
+        .product-price {
+            font-size: 30px;
+            font-weight: 500;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .product-count-btn {
+            cursor: pointer;
+        }
+
+        #totalSum {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+            #totalSum > span {
+                font-size: 36px;
+            }
+
+        #cartButtons a {
+            text-decoration: none;
+            border-width: 1px;
+            border-radius: 5px;
+            border-style: solid;
+            border-color: rgba(141, 152, 144, 1);
+            padding: 10px 20px;
+            color: rgba(141, 152, 144, 1);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        #cartButtons button {
+            border-radius: 5px;
+            border-style: solid;
+            border-color: rgba(141, 152, 144, 1);
+            padding: 10px 20px;
+            background-color: rgba(141, 152, 144, 1);
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+        }
+    </style>
+}
+<div class="row border-2 border-bottom py-3" style="align-items: center;">
+    <div class="col"></div>
+    <div class="col-1">кількість</div>
+    <div class="col-1">вартість</div>
+    <!-- <div class="col-1"></div> -->
+    <div class="col-1"></div>
+</div>
+@foreach (CartItem item in Model.Cart.CartItems)
+{
+    <div class="row border-2 border-bottom py-3" style="align-items: center;">
+        <div class="col-1">
+            @if (@item.Product.Images.Count >= 1)
+            {
+                <img class="w-100" src="data:image/*;base64,@(Convert.ToBase64String(item.Product.Images?.FirstOrDefault()!.File))" alt="@item.Product.Name" style="border-radius: 10px;">
+
+            }
+        </div>
+        <div class="col-1"></div>
+        <div class="col">@item.Product.Name</div>
+        <div class="col-1 d-flex border" style="text-align: center;">
+            <span class="flex-fill p-2 product-count-btn">-</span>
+            <span class="flex-fill p-2">@item.Quantity</span>
+            <span class="flex-fill p-2 product-count-btn">+</span>
+        </div>
+        <div class="col-1 product-price">@(item.Product.Price * item.Quantity) ₴</div>
+        <!-- <div class="col-1"></div> -->
+        <div class="col-1">
+            <form asp-action="RemoveFromCart" method="post" asp-controller="cart">
+                <input type="hidden" name="id" value="@item.Product.Id" />
+                <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                <button type="submit" style="color: black;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+                    </svg>
+                </button>
+            </form>
+            @* <a asp-action="RemoveFromCart" asp-controller="Cart"  asp-route-id="" style="color: black;">         </a>*@
+        </div>
+    </div>
+}
+<div id="totalSum" class="d-flex justify-content-end align-items-center">
+    загальна сума:
+    <span class="ms-3">@Model.Cart.GetTotalSum() ₴</span>
+</div>
+<div class="d-flex justify-content-between mt-5" id="cartButtons">
+    <a href="@Model.ReturnUrl">Повернутися до покупок</a>
+    <form asp-action="ConfirmOrder" method="post">
+        <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+        <button type="submit">Оформити замовлення</button>
+    </form>
+    @*  <a href="#">Оформити замовлення</a> *@
 </div>

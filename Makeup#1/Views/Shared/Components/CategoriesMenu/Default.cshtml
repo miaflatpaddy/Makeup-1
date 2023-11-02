@@ -15,7 +15,7 @@
                         @foreach (Category child in category.ChildCategories)
                         {
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Home"  asp-route-categoryId="@child.Id" >
                                     @child.Name
                                     @if (child.ChildCategories != null && child.ChildCategories.Count > 0)
                                     {
@@ -27,7 +27,7 @@
                                     <ul>
                                         @foreach (Category grandChild in child.ChildCategories)
                                         {
-                                            <li><a href="#">@grandChild.Name</a></li>
+                                            <li><a asp-action="Index" asp-controller="Home" asp-route-categoryId="@grandChild.Id">@grandChild.Name</a></li>
                                         }
                                     </ul>
                                 }

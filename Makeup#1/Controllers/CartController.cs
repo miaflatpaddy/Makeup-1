@@ -9,6 +9,7 @@ using System.Text;
 using Makeup_1.Models;
 using Makeup_1.Models.ViewModels.CartVievModels;
 using MailKit.Security;
+using Microsoft.EntityFrameworkCore;
 
 namespace Makeup_1.Controllers
 {
@@ -35,6 +36,7 @@ namespace Makeup_1.Controllers
             Product product = await context.Products.FindAsync(id);
             if (product != null)
             {
+                await context.Entry(product).Collection(t => t.Images).LoadAsync();
                 cart.AddItem(product, 1);
                 UpdateCart(cart);
             }

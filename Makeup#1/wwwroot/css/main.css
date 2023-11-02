@@ -169,6 +169,28 @@ main {
     font-size: 24px;
 }
 
+
+/***************Admin menu*****************/
+.AllBottomSide {
+    display: flex;
+    width: 100%;
+    padding: 5px;
+    justify-content: space-around;
+}
+
+    .AllBottomSide span {
+        color: white;
+    }
+
+    .AllBottomSide a {
+        color: white;
+        text-decoration: none;
+    }
+
+        .AllBottomSide a:hover {
+            color: #DDD;
+        }
+/******************************************/
 @media screen and (max-width: 992px) {
     .bottomBtnInTop {
         display: block;
@@ -268,16 +290,22 @@ main {
     padding: 10px;
 }
 
-.bestSeller {
-    background-color: #8d9890;
-    color: white;
-    padding: 2px 5px 2px 5px;
-    position: absolute;
-    top: 20px;
-    left: 25px;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
+/**/
+    .wrapperCard>a{
+        text-decoration: none;
+        color: black;
+    }
+    /**/
+    .bestSeller {
+        background-color: #8d9890;
+        color: white;
+        padding: 2px 5px 2px 5px;
+        position: absolute;
+        top: 20px;
+        left: 25px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
 
 .heartSeller {
     position: absolute;
@@ -405,3 +433,7 @@ ul.dropdown-menu ul {
         font-size: 15px;
         color: black;
     }
+#cartBtn {
+    border: none;
+    background-color: transparent;
+}

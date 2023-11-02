@@ -25,9 +25,24 @@ namespace Makeup_1.Controllers
             this.userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? categoryId)
         {
-            IQueryable<Product> products = _shopContext.Products.Include(t=>t.Brand).Include(t=>t.Images);
+            IQueryable<Product> products = _shopContext.Products
+                .Include(t => t.Brand)
+                .Include(t => t.Images)
+                .Include(t => t.Categories);
+
+            if (categoryId != null)
+            {
+                Category? mainCategory = await _shopContext.Categories.FindAsync(categoryId);
+                IEnumerable<int> categoryIds = new[] { categoryId.Value };
+                if (mainCategory is  not null)
+                {
+                    await _shopContext.Entry(mainCategory).Collection(t => t.ChildCategories).LoadAsync();
+                    categoryIds = categoryIds.Union(mainCategory.ChildCategories?.Select(t => t.Id));
+                }
+                products = products.Where(t => t.Categories.Any(t => categoryIds.Contains(t.Id)));
+            }
             HomeVievModel model = new HomeVievModel();
             model.products = await products.ToListAsync();
             model.cart = GetCart();
