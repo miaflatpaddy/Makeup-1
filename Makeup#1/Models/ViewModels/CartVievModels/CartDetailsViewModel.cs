@@ -11,6 +11,6 @@ namespace Makeup_1.Models.ViewModels.CartVievModels
 
         public Product Product { get; set; }
         public CommentDTO? comment { get; set; }
-        public QestionDTO? qestion { get; set; }
+        //public QestionDTO? qestion { get; set; }
     }
 }

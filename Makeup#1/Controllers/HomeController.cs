@@ -45,7 +45,7 @@ namespace Makeup_1.Controllers
                 return RedirectToAction("Index");
             Product? product = await _shopContext.Products.FindAsync(id);
             await _shopContext.Entry(product).Collection(t => t.Comments).LoadAsync();
-            await _shopContext.Entry(product).Collection(t => t.Questions).LoadAsync();
+            //await _shopContext.Entry(product).Collection(t => t.Questions).LoadAsync();
             foreach (var item in product.Comments)
             {
                 item.User = await _shopContext.Users.FindAsync(item.UserId);
@@ -89,21 +89,21 @@ namespace Makeup_1.Controllers
             return Redirect(comment.returnUrl);
         }
         [HttpPost]
-        public async Task<IActionResult> AddQuestion(QestionDTO question)
-        {
-            string userId = userManager.GetUserId(User);
-            Question question1 = new Question()
-            {
-                UserId = userId,
-                ProductId = question.productId,
-                Title = question.title,
-                Created = DateTime.Now,
-                Description = question.content
-            };
-            await _shopContext.Questions.AddAsync(question1);
-            await _shopContext.SaveChangesAsync();
-            return Redirect(question.returnUrl);
-        }
+        //public async Task<IActionResult> AddQuestion(QestionDTO question)
+        //{
+        //    string userId = userManager.GetUserId(User);
+        //    Question question1 = new Question()
+        //    {
+        //        UserId = userId,
+        //        ProductId = question.productId,
+        //        Title = question.title,
+        //        Created = DateTime.Now,
+        //        Description = question.content
+        //    };
+        //    await _shopContext.Questions.AddAsync(question1);
+        //    await _shopContext.SaveChangesAsync();
+        //    return Redirect(question.returnUrl);
+        //}
 
         //public void AddToCart(Product product,int count,string userid,CartModel cm) {
         //    cm.UserId = userid;
