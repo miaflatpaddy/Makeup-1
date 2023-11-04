@@ -36,6 +36,17 @@ namespace Makeup_1.Models
         {
             cartItems.RemoveAll(t => t.Product.Id == product.Id);
         }
+        public void RemoveItem(Product product, int count)
+        {
+            CartItem? cartItem = cartItems.FirstOrDefault(item => item.Product.Id == product.Id);
+            if (cartItem != null)
+            {
+                if(count>=cartItem.Quantity)
+                    RemoveItem(product);
+                else
+                    cartItem.Quantity -= count;
+            }
+        }
 
         public void Clear()
         {
@@ -50,6 +61,14 @@ namespace Makeup_1.Models
         public void AddItems(IEnumerable<CartItem> items)
         {
             cartItems = items.ToList();
+        }
+
+        public double GetSumByProduct(Product product)
+        {
+            CartItem cartItem = cartItems.FirstOrDefault(item => item.Product.Id == product.Id);
+            if (cartItem != null)
+                return cartItem.Quantity * cartItem.Product.Price;
+            return 0;
         }
     }
 }

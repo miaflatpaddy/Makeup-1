@@ -3,58 +3,12 @@
 @{
     int i = 0;
 }
-@* <div class="container">
-    <div class="row">
-        <h2>Корзина</h2>
-        <div class="col-3"></div>
-        <div class="col">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>№ п/п</th>
-                        <th>Название</th>
-                        <th>Стоимость</th>
-                        <th>Количество</th>
-                        <th>Сумма</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (CartItem item in Model.Cart.CartItems)
-                    {
-                        <tr>
-                            <td>@(++i)</td>
-                            <td>@item.Product.Name</td>
-                            <td>@item.Product.Price грн.</td>
-                            <td>@item.Quantity</td>
-                            <td>@((item.Product.Price * item.Quantity).ToString("# грн."))</td>
-                            <td>
-                                <form asp-action="RemoveFromCart" method="post">
-                                    <input type="hidden" name="id" value="@item.Product.Id" />
-                                    <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
-                                    <button type="submit" class="btn btn-sm btn-outline-warning">Видалити</button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-    <div class="row">
-        <a href="@Model.ReturnUrl" class="btn btn-secondary">Повернутися до покупок</a>
-        <form asp-action="ConfirmOrder" method="post">
-            <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
-            <button type="submit" class="btn btn-sm btn-success">Оформити замовлення</button>
-        </form>
-    </div>
-</div> *@
 @section PageStyles{
     <style>
         .product-price {
             font-size: 30px;
             font-weight: 500;
+            text-align: end;
         }
 
         .product-name {
@@ -71,8 +25,9 @@
             font-weight: 500;
         }
 
-            #totalSum > span {
+            #totalSumText {
                 font-size: 36px;
+                text-align: end;
             }
 
         #cartButtons a {
@@ -97,12 +52,15 @@
             font-size: 16px;
             font-weight: 500;
         }
+        .removeFromCartBtn{
+            border: none;
+        }
     </style>
 }
 <div class="row border-2 border-bottom py-3" style="align-items: center;">
     <div class="col"></div>
     <div class="col-1">кількість</div>
-    <div class="col-1">вартість</div>
+    <div class="col-2 text-end">вартість</div>
     <!-- <div class="col-1"></div> -->
     <div class="col-1"></div>
 </div>
@@ -119,29 +77,33 @@
         <div class="col-1"></div>
         <div class="col">@item.Product.Name</div>
         <div class="col-1 d-flex border" style="text-align: center;">
-            <span class="flex-fill p-2 product-count-btn">-</span>
+            <span class="flex-fill p-2 product-count-btn" onclick="decCount(event, @item.Product.Id)">-</span>
             <span class="flex-fill p-2">@item.Quantity</span>
-            <span class="flex-fill p-2 product-count-btn">+</span>
+            <span class="flex-fill p-2 product-count-btn" onclick="incCount(event, @item.Product.Id)">+</span>
         </div>
-        <div class="col-1 product-price">@(item.Product.Price * item.Quantity) ₴</div>
+        <div class="col-2 product-price">@(item.Product.Price * item.Quantity) ₴</div>
         <!-- <div class="col-1"></div> -->
         <div class="col-1">
             <form asp-action="RemoveFromCart" method="post" asp-controller="cart">
                 <input type="hidden" name="id" value="@item.Product.Id" />
                 <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
-                <button type="submit" style="color: black;">
+                <button type="submit" style="color: black;" class="removeFromCartBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                         <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
                     </svg>
                 </button>
             </form>
-            @* <a asp-action="RemoveFromCart" asp-controller="Cart"  asp-route-id="" style="color: black;">         </a>*@
         </div>
     </div>
 }
-<div id="totalSum" class="d-flex justify-content-end align-items-center">
-    загальна сума:
-    <span class="ms-3">@Model.Cart.GetTotalSum() ₴</span>
+<div id="totalSum" class="row align-items-center">
+    @* <div class="row"> *@
+        <div class="col"></div>
+        <div class="col-2">загальна сума:</div>
+        <div id="totalSumText" class="col-2">@Model.Cart.GetTotalSum() ₴</div>
+   @*  </div> *@
+    
+    
 </div>
 <div class="d-flex justify-content-between mt-5" id="cartButtons">
     <a href="@Model.ReturnUrl">Повернутися до покупок</a>
@@ -151,3 +113,47 @@
     </form>
     @*  <a href="#">Оформити замовлення</a> *@
 </div>
+@section Scripts{
+    <script>
+        async function incCount(e, productId) {
+            let resp = await fetch(`/cart/incCount/${productId}`, { method: "post" });
+            if (resp.ok === true) {
+                let data = await resp.json();
+                let countElem = e.target.previousElementSibling;
+                // let count = parseInt(countElem.innerText);
+                countElem.innerText = `${data.quantity}`;
+                // let p = document.createElement("a");
+                let parentDiv = countElem.parentElement;
+                let newSumElem = parentDiv.nextElementSibling;
+                newSumElem.innerText = `${data.sum} ₴`; 
+                await getTotalSum();
+            }
+        }
+        async function decCount(e, productId) {
+            let countElem = e.target.nextElementSibling;
+            let count = parseInt(countElem.innerText);
+            console.log(count);
+            if (count <= 1)
+                return;
+            let resp = await fetch(`/cart/decCount/${productId}`, { method: "post" });
+            if (resp.ok === true) {
+                let data = await resp.json();
+                countElem.innerText = `${data.quantity}`;
+                // let p = document.createElement("a");
+                let parentDiv = countElem.parentElement;
+                let newSumElem = parentDiv.nextElementSibling;
+                newSumElem.innerText = `${data.sum} ₴`;
+                await getTotalSum();
+            }
+        }
+        async function getTotalSum() {
+            let resp = await fetch(`/cart/getTotalSum`, { method: "post" });
+            if (resp.ok === true) {
+                let data = await resp.json();
+                let totalSumElem = document.querySelector("#totalSumText");
+                // let totalSumElem = document.querySelector("#totalSum>span");
+                totalSumElem.innerText = `${data.totalSum} ₴`;
+            }
+        }
+    </script>
+}

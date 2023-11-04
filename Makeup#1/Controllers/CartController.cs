@@ -46,7 +46,7 @@ namespace Makeup_1.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveFromCart(int id, Cart cart, string returnUrl)
         {
-            Product product = await context.Products.FindAsync(id);
+            Product? product = await context.Products.FindAsync(id);
             if (product != null)
             {
                 cart.RemoveItem(product);
@@ -55,6 +55,50 @@ namespace Makeup_1.Controllers
             return RedirectToAction("Index", new { returnUrl });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> IncCount(int id, Cart cart)
+        {
+            Product? product = await context.Products.FindAsync(id);
+            if (product != null)
+            {
+                await context.Entry(product).Collection(t => t.Images).LoadAsync();
+                cart.AddItem(product, 1);
+                UpdateCart(cart);
+                int quantity = cart.CartItems.First(t => t.Product.Id == id).Quantity;
+                return Ok(new
+                {
+                    quantity,
+                    Sum = cart.GetSumByProduct(product)
+                });
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DecCount(int id, Cart cart)
+        {
+            Product? product = await context.Products.FindAsync(id);
+            if (product != null)
+            {
+                await context.Entry(product).Collection(t => t.Images).LoadAsync();
+                cart.RemoveItem(product, 1);
+                UpdateCart(cart);
+                int quantity = cart.CartItems.First(t => t.Product.Id == id).Quantity;
+                return Ok(new
+                {
+                    quantity,
+                    Sum = cart.GetSumByProduct(product)
+                });
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult GetTotalSum(Cart cart)
+        {
+            double totalSum = cart.GetTotalSum();
+            return Ok(new {totalSum });
+        }
         public IActionResult SetCart()
         {
             Cart cart = new Cart();

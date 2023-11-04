@@ -1,5 +1,6 @@
 using Makeup_1.CustomPolicies;
 using Makeup_1.Database;
+using Makeup_1.ModelBinders;
 using Makeup_1.Serivces;
 using MakeupClassLibrary.DomainModels;
 using Microsoft.AspNetCore.Authorization;
@@ -15,7 +16,9 @@ builder.Services.AddDistributedMemoryCache();
 
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options => {
+    options.ModelBinderProviders.Insert(0, new CartModelBinderProvider());
+});
 builder.Services.AddDbContext<ShopContext>(options => { 
 
     options.UseSqlServer(
