@@ -60,6 +60,8 @@ namespace Makeup_1.Controllers
                 return RedirectToAction("Index");
             Product? product = await _shopContext.Products.FindAsync(id);
             await _shopContext.Entry(product).Collection(t => t.Comments).LoadAsync();
+            await _shopContext.Entry(product).Collection(t => t.Images).LoadAsync();
+            await _shopContext.Entry(product).Collection(t => t.Categories).LoadAsync();
             foreach (var item in product.Comments)
             {
                 item.User = await _shopContext.Users.FindAsync(item.UserId);

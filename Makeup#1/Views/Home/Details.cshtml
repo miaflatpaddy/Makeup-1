@@ -3,58 +3,553 @@
 @{
     ViewData["Title"] = "Product information";
 }
-<div class="container">
-    <div class="row">
-        <div class="col">
-            @if (Model.Product.Images.Count >= 1)
-            {
-                <img src="data:image/png;base64,@(Convert.ToBase64String(Model.Product.Images?.FirstOrDefault()!.File))" class="card-img-top" alt="@Model.Product.Name">
-            }
-        </div>
-        <div class="col">
-            <div class="product-details">
-                <h2>@Model.Product.Name</h2>
-                <form asp-action="AddToCart" asp-controller="Cart">
-                    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)">
-                    <input type="hidden" name="id" value="@Model.Product.Id">
-                    <input type="hidden" name="cart" value="@Model.Cart">
-                    <input type="submit" value="Купити" class="btn btn-sm btn-secondary" />
-                </form>
+<style>
+    ol.breadcrumb li a {
+        color: rgba(141, 152, 144, 0.5);
+    }
+
+    ol li.active a {
+        color: rgba(141, 152, 144, 1);
+    }
+
+    .mainCard {
+        display: flex;
+    }
+
+        .mainCard img {
+            flex: 0 0 556px;
+            height: auto;
+            width: 556px;
+        }
+
+        .mainCard div {
+            flex-shrink: 1;
+            flex-grow: 1;
+            flex-basis: 50%;
+        }
+
+    .articul {
+        color: rgba(141, 152, 144, 1)
+    }
+
+    .product-details > div {
+        display: flex;
+    }
+
+    .badge-presence {
+        background-color: rgba(141, 152, 144, 1);
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+    }
+
+    .product-details h2 {
+        font-weight: 600;
+        font-size: 24px;
+        text-transform: uppercase;
+    }
+
+    .stars {
+        color: rgba(141, 152, 144, 1);
+        font-size: 24px;
+    }
+
+    .inactive-stars {
+        color: rgba(141, 152, 144, 0.5);
+    }
+
+    .comment-author {
+        color: #8D9890;
+        font-size: 20px;
+        font-family: Montserrat;
+        font-weight: 600;
+        word-wrap: break-word
+    }
+
+    .komment-outhor2 {
+        color: #8D9890;
+        font-size: 20px;
+        font-family: Montserrat;
+        font-weight: 600;
+        word-wrap: break-word
+    }
+
+    .comment-text {
+        color: black;
+        font-size: 20px;
+        font-family: Montserrat;
+        font-weight: 500;
+        word-wrap: break-word;
+        border-left: 4px rgba(141, 152, 144, 1) solid;
+    }
+
+    .ommeknt-pext ps-3 {
+        color: black;
+        font-size: 20px;
+        font-family: Montserrat;
+        font-weight: 500;
+        word-wrap: break-word;
+        border-left: 4px rgba(141, 152, 144, 1) solid;
+    }
+
+    .price-prace {
+        color: black;
+        font-size: 40px;
+        font-family: Montserrat;
+        font-weight: 500;
+        text-transform: uppercase;
+        word-wrap: break-word
+    }
+
+    .buy-buys {
+        color: white;
+        font-size: 15px;
+        font-family: Montserrat;
+        font-weight: 400;
+        word-wrap: break-word
+    }
+
+    .product-info {
+        justify-content: space-between;
+    }
+
+        .product-info > div {
+            flex-grow: 0;
+        }
+
+    .card-product-title {
+        flex-grow: 1;
+        color: black;
+        font-size: 24px;
+        font-family: Montserrat;
+        font-weight: 600;
+        text-transform: uppercase;
+        word-wrap: break-word
+    }
+
+    .shampun-sham {
+        color: rgba(0, 0, 0, 0.60);
+        font-size: 20px;
+        font-family: Montserrat;
+        font-weight: 500;
+        word-wrap: break-word
+    }
+
+    .prace-tochka {
+        color: black;
+        font-size: 40px;
+        font-family: Montserrat;
+        font-weight: 500;
+        text-transform: uppercase;
+        word-wrap: break-word
+    }
+
+    .tab-panel {
+        text-align: center;
+        color: rgba(0, 0, 0, 0.50);
+        font-size: 24px;
+        font-family: Abhaya Libre SemiBold;
+        font-weight: 600;
+        text-transform: uppercase;
+        word-wrap: break-word;
+        border: hidden;
+        background-color: #f5f2ed;
+        display: flex;
+    }
+
+    .tab-text {
+        width: 100%;
+        color: black;
+        font-size: 20px;
+        font-family: Montserrat;
+        font-weight: 500;
+        word-wrap: break-word;
+    }
+
+    .tab-panel .active {
+        color: black;
+    }
+
+</style>
+@{
+    bool Islogin = false;
+    if (User != null)
+    {
+        Islogin = true;
+    }
+}
+<main style="background-color: #f5f2ed;">
+    <div class="container containerMain mt-5 mb-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Library</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Data</li>
+            </ol>
+        </nav>
+        <div class="row row-cols-lg-2">
+            <div class="col">
+                @if (Model.Product.Images.Count >= 1)
+                {
+                    <img src="data:image/png;base64,@(Convert.ToBase64String(Model.Product.Images?.FirstOrDefault()!.File))" class="card-img-top" alt="@Model.Product.Name">
+                }
+            </div>
+            <div class="col d-flex flex-column  product-info">
+                <div class="row">
+                    <div class="col">Артикул: 7395629</div>
+
+                    <div class="col col-4">
+                        <a href="#" style="display: inline-block;background-color:#8D9890;border-radius:5px;
+                                padding: 10px 20px;text-decoration: none;color: white">є в наявності</a>
+                    </div>
+                </div>
+                <div class="card-product-title">
+                    @Model.Product.Name
+                </div>
+                @foreach (Category cat in Model.Product.Categories)
+                {
+                    <div class="shampun-shamp">
+                        @cat.Name
+                    </div>
+                }
+
+
+                <div class="prace-tochka">
+                    @Model.Product.Price ₴
+                </div>
+                <div class="row">
+                    @*      <div class="col col-2">{}
+                    @{
+                    int starsLeft = 5 - Model.Product.Rating;
+
+                    }*@
+                    <div class="col d-flex">
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            @Html.Raw(i < Model.Product.Rating ? "<span>&#9733;</span>" : "<span>&#9734;</span>")
+
+
+                        }
+                        @*</div>*@
+                    </div>
+                    <div class="col col-4">
+                        @*<a href="#" style="display: inline-block;background-color:#8D9890;border-radius:5px;
+                        padding: 10px 20px;text-decoration: none;color: white">Купити</a>  *@              <form asp-action="AddToCart" asp-controller="Cart">
+                            <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)">
+                            <input type="hidden" name="id" value="@Model.Product.Id">
+                            <input type="hidden" name="cart" value="@Model.Cart">
+                            <input type="submit" value="Купити" style="display: inline-block;background-color:#8D9890;border-radius:5px;
+                            padding: 10px 20px;text-decoration: none;color: white" />
+                        </form>
+                    </div>
+                    <div class="col col-2 mb-5">
+                        <a href="#">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                                <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <form method="post" asp-action="AddComment">
-                <input type="hidden" asp-for="@Model.comment.returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)">
-                <input type="hidden" value="@Model.Product.Id" asp-for="@Model.comment.productId" />
-                <div class="form-group">
-                    <label asp-for="@Model.comment.title" class="control-label"></label>
-                    <input type="text" asp-for="@Model.comment.title" class="form-control" />
-                    <span asp-validation-for="@Model.comment.title" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="@Model.comment.content" class="control-label"></label>
-                    <textarea asp-for="@Model.comment.content" class="form-control"></textarea>
-                    <span asp-validation-for="@Model.comment.content" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Відправити" class="btn btn-primary" />
-                </div>
-            </form>
-        </div>
+        <!-- <div class="mainCard">
+            <img src="images/Rectangle 6 (1).jpg" alt="ffgh">
 
-        
-    </div>
-    <div class="row">
-        @foreach(Comment comment in Model.Product.Comments)
-        {
-            <div>
+            <div class="product-details ms-4">
+                <div>
+                    <div class="articul">Артикул: 7395629</div>
+                    <div class="badge-presence">В наявності</div>
+
+
+                </div>
+                <h2>Твердий шампунь для відновлення волосся з аргановою олією, 85 г</h2>
+                <div class="price-prace">171 ₴</div>
+                <div class="buy-buys">Купити ₴</div>
+            <div class "mainHeart">
+                <img src="images/heart (3) 1.jpg" alt="F5F2ED">
+
+            </div>
+
+                <div
+
+                    style="width: 100%; height: 100%; color: rgba(0, 0, 0, 0.60); font-size: 20px; font-family: Montserrat; font-weight: 100; word-wrap: break-word">
+                    Твердий шампунь</div>
+
+
+
+            </div>
+
+
+        </div>
+        -->
+        @*                <div
+        style="width: 100%; height: 100%; justify-content: flex-start; align-items: center; gap: 70px; display: inline-flex">
+        <div
+        style="text-align: center; color: black; font-size: 24px; font-family: Abhaya Libre SemiBold; font-weight: 600; text-transform: uppercase; word-wrap: break-word">
+        опис</div>
+
+        <div
+        style="text-align: center; color: rgba(0, 0, 0, 0.50); font-size: 24px; font-family: Abhaya Libre SemiBold; font-weight: 600; text-transform: uppercase; word-wrap: break-word">
+        характеристика</div>
+        <div
+        style="text-align: center; color: rgba(0, 0, 0, 0.50); font-size: 24px; font-family: Abhaya Libre SemiBold; font-weight: 600; text-transform: uppercase; word-wrap: break-word">
+        склад</div>
+        <div
+        style="text-align: center; color: rgba(0, 0, 0, 0.50); font-size: 24px; font-family: Abhaya Libre SemiBold; font-weight: 600; text-transform: uppercase; word-wrap: break-word">
+        спосіб застосування</div>
+        </div>*@
+        <ul class="nav nav-tabs" style="width: 100%; height: 100%; justify-content: flex-start; align-items: center; gap: 70px; display: inline-flex" id="myTab" role="tablist">
+            <li class="nav-item">
+                <button class="tab-panel active" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc" type="button" role="tab" aria-controls="desc" aria-selected="true">опис</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="tab-panel" id="characteristic-tab" data-bs-toggle="tab" data-bs-target="#characteristic" type="button" role="tab" aria-controls="characteristic" aria-selected="false">характеристика</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="tab-panel" id="sclad-tab" data-bs-toggle="tab" data-bs-target="#sclad" type="button" role="tab" aria-controls="sclad" aria-selected="false">склад</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="tab-panel" id="mou-tab" data-bs-toggle="tab" data-bs-target="#mou" type="button" role="tab" aria-controls="mou" aria-selected="false">спосіб застосування</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade tab-text show active" id="desc" role="tabpanel" aria-labelledby="desc-tab">@Model.Product.Description</div>
+            <div class="tab-pane fade tab-text" id="characteristic" role="tabpanel" aria-labelledby="characteristic-tab">...</div>
+            <div class="tab-pane fade tab-text" id="sclad" role="tabpanel" aria-labelledby="sclad-tab">...</div>
+            <div class="tab-pane fade tab-text" id="mou" role="tabpanel" aria-labelledby="mou-tab">@Model.Product.MethodOfUse</div>
+        </div>
+        @*                <pre></pre>
+
+        <div
+        style="width: 100%; color: black; font-size: 20px; font-family: Montserrat; font-weight: 500; word-wrap: break-word">
+        Щось новеньке для максимально делікатного догляду за волоссям від Nature Box — твердий шампунь, що
+        на 99 % складається з натуральних компонентів! Він не містить силіконів, парабенів, речовин
+        тваринного походження. Не тестувався на тваринах. Сертифікований COSMOS Natural.</div>*@
+</main>
+@*        <div class="d-flex">
+            <div
+                style="width: 80%; height: 100%; text-align: center; color: black; font-size: 24px; font-family: Montserrat; font-weight: 600; text-transform: uppercase; word-wrap: break-word">
+                відгуки</div>
+            <div
+                style="width: 125%; height: 100%; text-align: center; color: rgba(0, 0, 0, 0.50); font-size: 24px; font-family: Montserrat; font-weight: 600; text-transform: uppercase; word-wrap: break-word">
+                запитання</div>
+        </div>*@
+<ul class="nav nav-tabs" style="width: 100%; height: 100%; justify-content: flex-start; align-items: center; gap: 70px; display: inline-flex" id="myTab1" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="tab-panel active" style="width: 80%; height: 100%; text-align: center; color: black; font-size: 24px; font-family: Montserrat; font-weight: 600; text-transform: uppercase; word-wrap: break-word" id="Comment-tab" data-bs-toggle="tab" data-bs-target="#comment" type="button" role="tab" aria-controls="comment" aria-selected="true">відгуки</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="tab-panel" style="width: 125%; height: 100%; text-align: center; color: rgba(0, 0, 0, 0.50); font-size: 24px; font-family: Montserrat; font-weight: 600; text-transform: uppercase; word-wrap: break-word" id="Question-tab" data-bs-toggle="tab" data-bs-target="#question" type="button" role="tab" aria-controls="question" aria-selected="false">запитання</button>
+    </li>
+</ul>
+
+@*        <div id="commentsBlock">
+            <div class="container comment-container">
+                <div class="comment-header d-flex" style="justify-content: space-between;">
+                    <div><span class="stars">&starf;&starf;&starf;&starf;</span><span class="stars inactive-stars">&starf;</span></div>
+                    <span>29.10.23</span>
+                </div>
+                <div class="comment-author">Юлія</div>
+                <div class="comment-text ps-3">Купила заради інтересу і можу сказати, що з першого разу погано пінитися,
+                    на
+                    другий раз піни вже виходить більше і можна добре промити волосся. Для експерименту помила голову
+                    тільки ним без маски чи кондиціонера, після чого було трохи важче...
+                </div>
+            </div>
+        </div>*@
+<div class="tab-content" id="myTab1Content">
+    <div class="tab-pane fade show active" id="comment" role="tabpanel" aria-labelledby="Comment-tab">
+        <div>
+            <div class="row">
+                @foreach (Comment comment in Model.Product.Comments)
+                {
+                    @*                    <div>
                 <h6>@comment.User.UserName</h6>
                 <h5>@comment.Title</h5>
                 <p>@comment.Created</p>
                 <p>@comment.Description</p>
+                </div>*@
+                    <div id="commentsBlock">
+                        <div class="container comment-container">
+                            <div class="comment-header d-flex" style="justify-content: space-between;">
+                                <div><span class="stars">&starf;&starf;&starf;&starf;</span><span class="stars inactive-stars">&starf;</span></div>
+                                <span>@comment.Created</span>
+                            </div>
+                            <div class="comment-author">@comment.User.UserName</div>
+                            <div class="comment-text ps-3">
+                                @comment.Description
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                @if (Islogin){
+                    <div class="col">
+                        <form method="post" asp-action="AddComment">
+                            <input type="hidden" asp-for="@Model.comment.returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)">
+                            <input type="hidden" value="@Model.Product.Id" asp-for="@Model.comment.productId" />
+                            <div class="form-group">
+                                <label asp-for="@Model.comment.title" class="control-label"></label>
+                                <input type="text" asp-for="@Model.comment.title" class="form-control" />
+                                <span asp-validation-for="@Model.comment.title" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="@Model.comment.content" class="control-label"></label>
+                                <textarea asp-for="@Model.comment.content" class="form-control"></textarea>
+                                <span asp-validation-for="@Model.comment.content" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Відправити" class="tab-panel" />
+                            </div>
+                        </form>
+                    </div>
+                    }
+
+                </div>
             </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="question" role="tabpanel" aria-labelledby="Question-tab">
+        @*<div>
+        <div class="row">
+        <div class="col">
+        <form method="post" asp-action="AddQestion">
+        <input type="hidden" asp-for="@Model.qestion.returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)">
+        <input type="hidden" value="@Model.Product.Id" asp-for="@Model.qestion.productId" />
+        <div class="form-group">
+        <label asp-for="@Model.qestion.title" class="control-label"></label>
+        <input type="text" asp-for="@Model.qestion.title" class="form-control" />
+        <span asp-validation-for="@Model.qestion.title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+        <label asp-for="@Model.qestion.content" class="control-label"></label>
+        <textarea asp-for="@Model.qestion.content" class="form-control"></textarea>
+        <span asp-validation-for="@Model.qestion.content" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+        <input type="submit" value="Відправити" class="btn btn-primary" />
+        </div>
+        </form>*
+        </div>
+        </div>
+        <div class="row">
+        @foreach (Question comment in Model.Product.Questions)
+        {
+        <div>
+        <h6>@comment.User.UserName</h6>
+        <h5>@comment.Title</h5>
+        <p>@comment.Created</p>
+        <p>@comment.Description</p>
+        </div>
         }
+        </div>
+        </div>*@
+    </div>
+    @*            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>*@
+</div>
+@*        <div class="d-flex">
+
+        </div>*@
+@*        <div id="commentsBlock">
+
+            <div class="container comment-container">
+                <div class="comment-header d-flex" style="justify-content: space-between;">
+                    <div><span class="stars">&starf;&starf;&starf;&starf;</span><span
+                        class="stars inactive-stars">&starf;</span></div>
+                <span>29.10.23</span>
+        <div class="komment-outhor2">Каріна</div>
+        <div class="ommeknt-pext ps-3">Купила заради інтересу і можу сказати, що з першого разу погано пінитися,
+            на
+            другий раз піни вже виходить більше і можна добре промити волосся. Для експерименту помила голову
+            тільки ним без маски чи кондиціонера, після чого було трохи важче...
+        </div>
+     </div>
+     </div>
+     </div>*@
+@*<div style="width: 100%; height: 100%; text-align: center; color: black; font-size: 24px; font-family: Montserrat; font-weight: 700; text-transform: uppercase; word-wrap: break-word">
+    ви дивились
+</div>
+
+
+
+<div class="row">
+    <div class="colCentered col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+        <div class="wrapperCard">
+            <div class="cardMain">
+
+                <div class="heartSeller"><img src="images/heart (3) 1.jpg" alt="heart" width="35px"></div>
+                <div class="imgCard">
+                    <img class="imgPropert" src="images/Rectangle 6 (2).jpg" style="border-radius: 10px;" />
+                </div>
+            </div>
+            <div class="textCard">
+                <p class="mt-3" style="text-align: center;">
+                    Парфумований cкраб для тіла з шиммером Magic Sparkle Joko Blend
+                </p>
+                <div class="moneyBlock"> <span>220</span> <span>грн</span></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="colCentered col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+        <div class="wrapperCard">
+            <div class="cardMain">
+
+                <div class="heartSeller"><img src="images/heart (3) 1.jpg" alt="heart" width="35px"></div>
+                <div class="imgCard">
+                    <img class="imgPropert" src="images/Rectangle 6.jpg" style="border-radius: 10px;" />
+                </div>
+            </div>
+            <div class="textCard">
+                <p class="mt-3" style="text-align: center;">
+                    Парфумований cкраб для тіла з шиммером Magic Sparkle Joko Blend
+                </p>
+                <div class="moneyBlock"> <span>191</span> <span>грн</span></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="colCentered col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+        <div class="wrapperCard">
+            <div class="cardMain">
+                <div class="bestSeller">best seller</div>
+                <div class="heartSeller"><img src="images/heart (3) 1.jpg" alt="heart" width="35px"></div>
+                <div class="imgCard">
+                    <img class="imgPropert" src="images/Rectangle 6 (2).jpg" style="border-radius: 10px;" />
+                </div>
+            </div>
+            <div class="textCard">
+                <p class="mt-3" style="text-align: center;">
+                    Парфумований cкраб для тіла з шиммером Magic Sparkle Joko Blend
+                </p>
+                <div class="moneyBlock"> <span>98</span> <span>грн</span></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="colCentered col-12 col-xl-3 col-lg-4 col-md-6 col-sm-12">
+        <div class="wrapperCard">
+            <div class="cardMain">
+
+                <div class="heartSeller"><img src="images/heart (3) 1.jpg" alt="heart" width="35px"></div>
+                <div class="imgCard">
+                    <img class="imgPropert" src="images/Rectangle 6 (3).jpg" style="border-radius: 10px;" />
+                </div>
+            </div>
+            <div class="textCard">
+                <p class="mt-3" style="text-align: center;">
+                    Парфумований cкраб для тіла з шиммером Magic Sparkle Joko Blend
+                </p>
+                <div class="moneyBlock"> <span>97</span> <span>грн</span></div>
+            </div>
+        </div>
     </div>
 </div>
+
+*@

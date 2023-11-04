@@ -9,6 +9,7 @@
         isAdmin = User.IsInRole("Admin");
     }
 }
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -105,7 +106,9 @@
                             </form>
                         </div>
                         <div class="imgBrandBlock">
+@*                            <a class="navbar-brand" href="/home">*@
                             <img class="brandSize" src="/images/logo.svg" alt="Logo" />
+@*                            </a>*@
                         </div>
 
                         <div class="iconBlock">
@@ -122,18 +125,18 @@
                 <div class="row">
                     <vc:categories-menu></vc:categories-menu>
                 </div>
-                <div class="row">
-@*                     @if (isAdmin)
-                    { *@
+                <div class="row AllBottomSide">
+                     @if (isAdmin)
+                    { 
                         <div class="AllBottomSide">
-                            <a asp-controller="Categories" asp-action="Index">Categories</a>
-                            <a asp-controller="Brands" asp-action="Index">Brands</a>
-                            <a asp-controller="Products" asp-action="Index">Products</a>
-                            <a asp-controller="Images" asp-action="Index">Images</a>
-                            <a asp-controller="User" asp-action="Index">Users</a>
-                            <a asp-controller="Role" asp-action="Index">Roles</a>
+                        <a asp-controller="Categories" asp-action="Index" class="AllBottomSide">Categories</a>
+                        <a asp-controller="Brands" asp-action="Index" class="AllBottomSide">Brands</a>
+                        <a asp-controller="Products" asp-action="Index" class="AllBottomSide">Products</a>
+                        <a asp-controller="Images" asp-action="Index" class="AllBottomSide">Images</a>
+                        <a asp-controller="User" asp-action="Index" class="AllBottomSide">Users</a>
+                        <a asp-controller="Role" asp-action="Index" class="AllBottomSide">Roles</a>
                         </div>
-                    @* } *@
+                     } 
                 </div>
             </div>
         </header>
