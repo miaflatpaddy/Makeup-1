@@ -109,7 +109,7 @@
                         </div>
 
                         <div class="iconBlock">
-                            <img class="imgBtnCenter me-2" src="/images/user.png" alt="user" />
+                            <a asp-action="Login" asp-controller="Account"> <img class="imgBtnCenter me-2" src="/images/user.png" alt="user" /></a>                         
                             <form asp-action="Index" asp-controller="Cart">
                                 <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)">
                                 <button type="submit" id="cartBtn"><img class="imgBtnCenter me-2" src="/images/shopping.png" alt="shop" /></button>

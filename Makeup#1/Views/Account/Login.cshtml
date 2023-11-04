@@ -1,5 +1,20 @@
 ﻿@using Makeup_1.Models.ViewModels.AccountViewModels
 @model LoginViewModel
+@section PageStyles{
+    <style>
+        input[type="submit"], a {
+            background-color: rgba(141, 152, 144, 1);
+            border-radius: 5px;
+            padding: 10px;
+            color: rgba(217, 217, 217, 1);
+            font-weight: 500;
+            border: none;
+        }
+        a{
+            text-decoration: none;
+        }
+    </style>
+}
 <form asp-action="Login" method="post">
     <div asp-validation-summary="ModelOnly"></div>
     <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
@@ -17,7 +32,8 @@
         <label asp-for="IsPersistent"></label>
         <input asp-for="IsPersistent" />
     </div>
-    <input type="submit" value="Увійти" class="btn btn-primary" />
-    <a asp-controller="Account" asp-action="GoogleAuth" class="btn btn-info">LogIn With Google</a>
-    <a asp-controller="Account" asp-action="FbAuth" class="btn btn-info">LogIn With Facebook</a>
+    <input type="submit" value="Увійти" />
+   @*  <a asp-controller="Account" asp-action="GoogleAuth" class="btn btn-info">LogIn With Google</a>
+    <a asp-controller="Account" asp-action="FbAuth" class="btn btn-info">LogIn With Facebook</a> *@
 </form>
+<div>Ще не зареєстровані? <a asp-action="Register" asp-controller="Account">Зареєструватися</a></div>
